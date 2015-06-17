@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'bib2web',
   packages = ['bib2web'], # this must be the same as the name above
-  version = '0.1',
+  version = '0.13',
   description = 'Reference manager and generate website with it using BibBase.org',
   author = 'Justin van Wageningen',
   author_email = 'justinvwageningen@gmail.com',

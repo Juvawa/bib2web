@@ -7,7 +7,7 @@ setup(
   author = 'Justin van Wageningen',
   author_email = 'justinvwageningen@gmail.com',
   url = 'https://github.com/Juvawa/bib2web', # use the URL to the github repo
-  download_url = 'https://github.com/Juvawa/bib2web/mypackage/tarball/0.1', # I'll explain this in a second
+  download_url = 'https://github.com/Juvawa/bib2web/mypackage/tarball/0.12', # I'll explain this in a second
   keywords = ['bibtex', 'BibBase', 'Universiteit van Amsterdam'], # arbitrary keywords
   classifiers = [],
 )

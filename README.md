@@ -2,6 +2,9 @@ Bib2Web
 -------
 -------
 
+The bib2web/bibtexparser is the following package: https://github.com/sciunto/python-bibtexparser.  
+I just made a small alteration, it now ignores lines syartin with '%' and '//'. Which are comments in BibTeX.
+
 Installation:
 ------------
 

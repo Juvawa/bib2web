@@ -1,1 +1,1 @@
-include ../prototype/bibtexparser/*
+recursive-include bib2web/bibtexparser *

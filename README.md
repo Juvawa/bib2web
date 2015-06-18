@@ -10,7 +10,7 @@ Install Dropbox using https://www.dropbox.com/install?os=lnx
 
 ### Install dependencies:
 
-    sudo apt-get install python-pip build-essential python-tk python-Levenshtein
+    sudo apt-get install python-pip build-essential python-tk python-levenshtein
 
 ### Install package:
 The package is installed using this command:

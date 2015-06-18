@@ -1,5 +1,5 @@
 from Tkinter import *
-#from main import dir_to_file_list, main
+import main
 from bibtexparser.bibdatabase import BibDatabase
 import ConfigParser
 import os
@@ -10,19 +10,21 @@ import urllib2
 import time
 
 class GUI():
+    #GUI initation function
     def __init__(self):
         self.file_list = []
         self.tree = None
         self.win = self.makeWindow()
-        self.bib_dir = ""
+        self.bib_dir = None
         self.personal_website_bib = None
         self.personal_website_html = None
         self.personal_link = None
         self.group_website_bib = None
         self.group_website_html = None
         self.group_link = None
+        self.bibtex_files = None
 
-
+    #Find the selected rows
     def whichSelected(self, website):
         select = self.tree.selection()
         selected = []
@@ -34,6 +36,8 @@ class GUI():
             selected.append(self.file_list[index])
         self.write_selected_to_file(selected, website)
 
+    #Write selected rows to personal or group bib file
+    #from this bib file a website is created using BibBase.org
     def write_selected_to_file(self, selected, website):
         db = BibDatabase()
         result = []
@@ -43,7 +47,6 @@ class GUI():
                 db = bibtexparser.load(f)
                 result.append(db.entries[0])
         db.entries = result
-        #print db.entries
         if website == 'personal':
             with open(self.personal_website_bib, 'w') as f:
                 bibtexparser.dump(db, f)
@@ -51,7 +54,7 @@ class GUI():
             with open(self.group_website_bib, 'w') as f:
                 bibtexparser.dump(db, f)
 
-        #Make sure the file is uploaded before it is send to BibBase
+        #Make sure the file is uploaded to Dropbox before it is send to BibBase
         time.sleep(1)
         
         #Query to BibBase with the right URL
@@ -76,17 +79,21 @@ class GUI():
             with open(self.group_website_html, 'w') as website:
                 website.write(html)    
 
-    def update_table(self, filter):
+    #Update the table with new entries
+    def update_table(self):
+        print "Updating table with new entries"
         self.tree.delete(*self.tree.get_children());
+        self.file_list = []
         count = 0
-        for f in os.listdir(bib_dir):
+        for f in os.listdir(self.bib_dir):
             if f.endswith(".bib"):
-                files.append(f)
+                self.file_list.append(f)
                 split = f.split('_')
                 split[-1] = split[-1].split('.')[0]
                 self.tree.insert("", count, values=(split[0], split[1], split[2:]))
                 count += 1
 
+    #Define and create the GUI
     def makeWindow(self):
         global select
         win = Tk()
@@ -95,7 +102,7 @@ class GUI():
         
         frame2 = Frame(win)       # Row of buttons
         frame2.pack()
-        b1 = Button(frame2,text="Search for new entries",command=lambda: self.update_table(None))
+        b1 = Button(frame2,text="Search for new entries",command=lambda: main.search_new(self.config, self.bib_dir, self, self.bibtex_files))
         b2 = Button(frame2,text="Generate personal website",command=lambda: self.whichSelected('personal'))
         b3 = Button(frame2,text="Generate group website",command=lambda: self.whichSelected('group'))
         b1.pack(side=LEFT); b2.pack(side=LEFT); b3.pack(side=LEFT)

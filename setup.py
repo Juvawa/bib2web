@@ -10,4 +10,5 @@ setup(
   download_url = 'https://github.com/Juvawa/bib2web/tarball/0.16', # I'll explain this in a second
   keywords = ['bibtex', 'BibBase', 'Universiteit van Amsterdam'], # arbitrary keywords
   classifiers = [],
+  install_requires = ['pybtex==0.18', 'fuzzywuzzy==0.5.0', 'latexcodec==1.0.1'],
 )

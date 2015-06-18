@@ -58,10 +58,11 @@ def create_id(t, year, title):
 	return str(t) + "_" + str(year) + "_" + str(space_to_underscore(title))
 
 def pdf(pdf_files, shared_pdf, bibtex_folder, bibtex_files, gscholar):
-	print "gettings pdf " + str(pdf_files)
 	for pdf in pdf_files:
 		txt = re.sub("\W", " ", gs.convert_pdf_to_txt(pdf)).lower()
-		words = txt.strip().split()[:15]
+		#Research determined that the cutting of 35 words gives the 
+		#highest accuracy
+		words = txt.strip().split()[:35]
 		words = " ".join(words)		
 		print words
 		if gscholar == True:
@@ -74,17 +75,17 @@ def pdf(pdf_files, shared_pdf, bibtex_folder, bibtex_files, gscholar):
 				key = 'pdf' + str(len(matching))
 			#link = os.symlink(pdf, str(shared_pdf) + str(pdf.split('/')[-1]))
 			bib.entries = [add_field(bib.entries[0], key, bib)]
-			#print bib.entries
 			bibtex(bib.entries, bibtex_folder, bib)
 			sleep(random.uniform(1, 2))
 		else:
-			print "Im in else"
 			best_match = process.extractBests(words, bibtex_files, limit=1)
 			print best_match
 			if best_match:
 				bib = best_match[0][0]
 				score = best_match[0][1]
-				if score > 60:
+				#Research determined that matching score of 45
+				#gives the highest accuracy
+				if score > 45:
 					with open(bib, 'r') as f:
 						db = load(f)
 					entries = db.entries[0]
@@ -109,7 +110,7 @@ def check_bibtex(t, keys):
 
 # BibTex controll function, decides if BibTex needs to be merged
 # or if it can just be written
-def bibtex(entries, db_folder, current_file, shared_files):
+def bibtex(entries, db_folder, current_file):
 
 	#Loop through all entries
 	for i, entry in enumerate(entries):
@@ -232,7 +233,20 @@ def dir_to_file_list(dirs, ext):
 	return files
 
 
+def search_new(config, shared_bib, graphical, bibtex_files):
+	for bib in bibtex_files:
+		with open(bib, 'r') as bibtex_file:
+			db = load(bibtex_file)
+			bibtex(db.entries, shared_bib, bibtex_file)
 
+	if config.get('pdf', 'search_pdf') == True:
+		gscholar = config.get('general','google_scholar')
+		pdf_files = dir_to_file_list(config.get('pdf', 'directories').split(','), '.pdf')
+		bibtex_files_shared = dir_to_file_list(shared_bib.split(','), '.bib')
+		shared_pdf = config.get('pdf', 'shared_directory')
+		pdf(pdf_files, shared_pdf, shared_bib, bibtex_files_shared, gscholar)
+
+	graphical.update_table()
 
 def main():
 	print sys.argv
@@ -250,9 +264,10 @@ def main():
 		for ext in extentions:
 			bibtex_files.append(dir_to_file_list(config.get('bibtex', 'directories').split(','), ext.strip()))
 		bibtex_files = [item for sublist in bibtex_files for item in sublist]
-		print bibtex_files
 		shared_bib = config.get('bibtex', 'shared_directory')
+		graphical.config = config
 		graphical.bib_dir = shared_bib
+		graphical.bibtex_files = bibtex_files
 		graphical.personal_website_bib = config.get('general', 'personal_website_bib')
 		graphical.personal_website_html = config.get('general', 'personal_website_html')
 		graphical.personal_link = config.get('general', 'personal_link').replace('dl=0', 'raw=1')
@@ -268,18 +283,6 @@ def main():
 				split[-1] = split[-1].split('.')[0]
 				graphical.tree.insert("", count, values=(split[0], split[1], split[2:]))
 				count += 1
-	
-		"""for bib in bibtex_files:
-			with open(bib, 'r') as bibtex_file:
-				db = load(bibtex_file)
-				bibtex(db.entries, shared_bib, bibtex_file, shared_files)
-
-		if config.get('pdf', 'search_pdf') == True:
-			gscholar = config.get('general','google_scholar')
-			pdf_files = dir_to_file_list(config.get('pdf', 'directories').split(','), '.pdf')
-			bibtex_files_shared = dir_to_file_list(shared_bib.split(','), '.bib')
-			shared_pdf = config.get('pdf', 'shared_directory')
-			pdf(pdf_files, shared_pdf, shared_bib, bibtex_files_shared, gscholar)"""
 
 		graphical.win.mainloop()
 

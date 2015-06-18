@@ -5,6 +5,9 @@ Bib2Web
 Installation:
 ------------
 
+### Install Dropbox:
+Install Dropbox using https://www.dropbox.com/install?os=lnx
+
 ### Install dependencies:
 
     sudo apt-get install python-pip build-essential python-tk python-Levenshtein

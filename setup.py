@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
   name = 'bib2web',
-  packages = ['bib2web'], # this must be the same as the name above
+  packages = ['bib2web', 'bib2web.bibtexparser'], # this must be the same as the name above
   version = '0.15',
   description = 'Reference manager and generate website with it using BibBase.org',
   author = 'Justin van Wageningen',
